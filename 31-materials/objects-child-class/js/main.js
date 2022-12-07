@@ -2,7 +2,7 @@
 
 class Farm {
     constructor(name) {
-        name
+        this.name = name
     }
     plow() {
         console.log(`plowing to begin at ${this.name}`)
@@ -10,12 +10,18 @@ class Farm {
 }
 
 class Garden extends Farm {
-    constructor(name, acres) {
+    constructor(name) {
         super(name)
-        acres
     }
-    super(plow)
+    plow() {
+        super.plow()
+    }
 }
 
-let brela = new Garden('Brela', 70)
-console.log(brela.plow())
+let brela = new Farm('Brela')
+brela.plow()
+
+
+let farm1 = new Garden('farm1')
+console.log(farm1.name)
+farm1.plow()
