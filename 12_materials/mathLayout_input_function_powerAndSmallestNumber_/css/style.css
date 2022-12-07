@@ -1,0 +1,93 @@
+/******************************************
+/* CSS
+/*******************************************/
+
+/* Box Model Hack */
+* {
+  box-sizing: border-box;
+}
+
+/******************************************
+/* LAYOUT
+/*******************************************/
+body, #lastDiv, #firstDiv, [id*='check'], [id*='result'], section {
+  display: flex;
+}
+
+body {
+  flex-direction: column;
+  align-items: center;
+}
+
+h2 {
+  text-align: center;
+  width: 100%;
+}
+
+body>div {
+  width: 50%
+}
+
+section {
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  left: -50px;
+  margin-bottom: 100px;
+}
+
+[id*='check'] {
+  /*--button--*/
+  background-color: rgb(165, 177, 177);
+  border: solid black 1px;
+  color: aliceblue;
+  width: 35px;
+  height: 100px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+/*-------group {---------*/
+#firstDiv {
+  flex-direction: column;
+  gap: 10px;
+  justify-content: space-around;
+  position: relative;
+  left: 100px;
+}
+
+/* section.two #firstDiv {
+  position: relative;
+  left: 120px;
+} */
+
+/*------- } group---------*/
+
+#lastDiv {
+  gap: 20px;
+  align-content: center;
+  padding-top: 5px;
+}
+
+
+[id*='result'] {
+  width: 100px;
+  height: auto;
+  border: 1px solid green;
+  justify-content: center;
+  align-items: center;
+}
+
+#a, #b, #c, #d, #x, #n {
+  width: 30%;
+  float: right;
+  position: relative;
+  right: 140px;
+}
+
+
+/******************************************
+/* ADDITIONAL STYLES
+/*******************************************/

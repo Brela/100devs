@@ -1,0 +1,52 @@
+* {
+    text-align: center;
+}
+
+/* <h1>Make this text blue, underlined, and have a gold background</h1> */
+
+h1 {
+    color: blue;
+    text-decoration: underline;
+    background: gold;
+}
+
+/* <h2>Make this text purple, bolded, 25px, and hav an orange border </h2> */
+h2 {
+    color: purple;
+    font-weight: 600;
+    font-size: 25px;
+    border: 1px solid orange;
+}
+
+/* <section>
+		<p>Make this section width of 50%, height of 200px, background of gray, border of black, and the paragraph text white</p>
+    </section> */
+section.contain, section.s2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 0 30px 0;
+}
+
+section.contain section {
+
+    width: 50%;
+    height: 200px;
+    background: grey;
+    border: 1px solid black;
+    color: white;
+}
+
+/* <footer>
+		<h3>Make this footer have a black background, with light green border, and this text 20px white plus a font-family of Roboto</h3>
+	</footer> */
+
+footer {
+    background: black;
+    border: 2px solid lightseagreen;
+    font-size: 20px;
+    font-family: 'Roboto', 'Helvetica', 'Sans-Serif';
+    color: white;
+
+    ;
+}

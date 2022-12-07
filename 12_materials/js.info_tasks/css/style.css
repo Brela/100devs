@@ -1,0 +1,81 @@
+/******************************************
+/* CSS
+/*******************************************/
+
+/* Box Model Hack */
+* {
+  box-sizing: border-box;
+}
+
+/******************************************
+/* LAYOUT
+/*******************************************/
+body, #lastDiv, #firstDiv, #check, #result, section {
+  display: flex;
+}
+
+body {
+  flex-direction: column;
+  align-items: center;
+}
+
+h2 {
+  text-align: center;
+  width: 100%;
+}
+
+body>div {
+  width: 50%
+}
+
+section {
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  left: -50px;
+
+}
+
+#check {
+  /*--button--*/
+  background-color: rgb(165, 177, 177);
+  border: solid black 1px;
+  color: aliceblue;
+  width: 35px;
+  height: 100px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+#firstDiv {
+  flex-direction: column;
+  gap: 10px;
+  justify-content: space-around;
+  position: relative;
+  left: 100px;
+}
+
+#lastDiv {
+  gap: 20px;
+  align-content: center;
+  padding-top: 5px;
+}
+
+
+#result {
+  width: 100px;
+  height: auto;
+  border: 1px solid green;
+  justify-content: center;
+  align-items: center;
+}
+
+#a, #b {
+  width: 30%;
+}
+
+/******************************************
+/* ADDITIONAL STYLES
+/*******************************************/

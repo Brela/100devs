@@ -1,0 +1,104 @@
+/******************************************
+/* CSS
+/*******************************************/
+
+/* Box Model Hack */
+* {
+  box-sizing: border-box;
+  text-align: center;
+  line-height: .5em;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+
+}
+
+div.sides {
+  height: 100vh;
+  width: 15%;
+  background-color: rgb(58, 57, 57);
+}
+
+h1 {
+  flex-basis: 100%;
+  margin: 50px auto;
+}
+
+div.container {
+  display: flex;
+  justify-content: center;
+
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+div h3, input {
+  height: auto;
+  width: 40px;
+  display: flex;
+  border: none;
+  font-size: 2.5em;
+}
+
+.boxOutline {
+  padding: 10px;
+  border: solid 1px rgb(150, 238, 245);
+  height: 100px;
+  display: flex;
+  align-items: center;
+}
+
+#wand1, #wand2, #wand3, #wand4, #wand5 {
+  font-size: 1em;
+}
+
+p {
+  margin-top: 200px;
+
+}
+
+/******************************************
+/*BUTTONS
+/*******************************************/
+button {
+  padding: 10px 14px;
+  margin: 15px;
+  border: none;
+  font-family: 'Lato', sans-serif;
+  color: aliceblue;
+  background: rgb(90, 94, 92);
+  font-size: 10px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+button:hover {
+  background: rgb(65, 156, 168)
+}
+
+button:active {
+  transform: translateY(3px);
+  transition-duration: .10s;
+}
+
+button:active:hover {
+  background: rgb(132, 241, 255)
+}
+
+.simplebutton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/******************************************
+/* LAYOUT
+/*******************************************/
