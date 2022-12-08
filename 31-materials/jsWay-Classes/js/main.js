@@ -83,3 +83,6 @@ aurora.attack(monster);
 glacius.attack(monster);
 console.log(aurora.describe());
 console.log(glacius.describe());
+
+
+// let's goooooo
