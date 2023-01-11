@@ -69,36 +69,41 @@
 // promise
 //     .then(data => console.log(data))
 //     .catch(err => console.log(err))
-
+console.log('---------------------------------------------------------------')
 //Code 06
-// function houseOne() {
-//     return new Promise((resolve, reject) => {
-//         setTimeout(() => {
-//             resolve('Paper delivered to house 1')
-//         }, 1000)
-//     })
-// }
-// function houseTwo() {
-//     return new Promise((resolve, reject) => {
-//         setTimeout(() => {
-//             resolve('Paper delivered to house 2')
-//         }, 5000)
-//     })
-// }
-// function houseThree() {
-//     return new Promise((resolve, reject) => {
-//         setTimeout(() => {
-//             resolve('Paper delivered to house 3')
-//         }, 2000)
-//     })
-// }
-// houseOne()
-//     .then(data => console.log(data))
-//     .then(houseTwo)
-//     .then(data => console.log(data))
-//     .then(houseThree)
-//     .then(data => console.log(data))
-//     .catch(err => console.log(err))
+function houseOne() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve('Paper delivered to house 1')
+        }, 1100)
+    })
+}
+function houseTwo() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve('Paper delivered to house 2')
+        }, 5000)
+    })
+}
+function houseThree() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve('Paper delivered to house 3')
+        }, 500)
+    })
+}
+console.log("code 6 using chained .then()s: ")
+houseOne()
+    .then(data => console.log(data))
+    .then(houseTwo)
+    .then(data => console.log(data))
+    .then(houseThree)
+    .then(data => {
+        console.log(`${data}`)
+        console.log('---------------------------------------------------------------')
+    })
+    .catch(err => console.log(err))
+
 
 //Code 07
 function houseOne() {
@@ -127,9 +132,13 @@ async function getPaid() {
     const houseOneWait = await houseOne()
     const houseTwoWait = await houseTwo()
     const houseThreeWait = await houseThree()
+    // const arr7 = [houseOneWait, houseTwoWait, houseThreeWait]
+    // console.table(arr7)
+    console.log('code 7 - each house\'s const waits on it\'s corresponding function, then the function is called at once')
     console.log(houseOneWait)
     console.log(houseTwoWait)
     console.log(houseThreeWait)
+    console.log('---------------------------------------------------------------')
 }
 
 getPaid()
