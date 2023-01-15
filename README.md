@@ -1,2 +1,2 @@
 # 100devs
-## coursework
+## coursework for 100devs :)
