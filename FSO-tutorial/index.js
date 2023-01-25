@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv')
 dotenv.config()
 
+// middleware
 app.use(cors());
 app.use(express.json())
 
@@ -58,7 +59,6 @@ app.get('/info', (req, res) => {
     res.send(`Phonebook has info for ${count} people<br><br>${date}`);
 });
 
-
 app.post('/api/people', (req, res) => {
     const body = req.body
 
@@ -97,6 +97,14 @@ app.delete('/api/people/:id', (req, res) => {
     console.log(people)
     res.status(204).end()
 })
+
+
+
+
+
+
+
+
 // centralized error handling middleware to remove error handling in every endpoint
 app.use((err, req, res, next) => {
     console.error(err.message)
