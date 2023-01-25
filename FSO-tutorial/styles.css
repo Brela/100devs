@@ -1,0 +1,18 @@
+* {
+    box-sizing: border-box;
+}
+
+div {
+    float: left;
+    background-color: rgb(161, 177, 157);
+    border: 2px solid black;
+    width: 33.33%;
+    height: 40px;
+}
+
+li {
+    border: .5px solid black;
+    float: left;
+    width: 20%;
+    height: 100%;
+}

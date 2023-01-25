@@ -1,7 +1,5 @@
 // this is a practice file for setting up mongoose
-const mongoose = require('mongoose')
-const dotenv = require('dotenv')
-dotenv.config()
+
 
 
 if (process.argv.length < 3) {

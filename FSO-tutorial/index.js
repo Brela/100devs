@@ -1,14 +1,53 @@
+// https://fullstackopen.com/en/part3/saving_data_to_mongo_db#exercise-3-12
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 dotenv.config()
+
+//-------------------------------------------------------------------------
+// const password = process.env.db_password
+
+
+
+mongoose.set('strictQuery', false)
+
+const url = process.env.MONGODB_URI
+console.log('connecting to', url)
+mongoose.connect(url)
+    .then(result => {
+        console.log('connected to MongoDB')
+    })
+    .catch((error) => {
+        console.log('error connecting to MongoDB:', error.message)
+    })
+
+const noteSchema = new mongoose.Schema({
+    pName: String,
+    pNumber: Number,
+})
+noteSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject._id
+        delete returnedObject.__v
+    }
+})
+
+module.exports = mongoose.model('Note', noteSchema)
+
+const Note = mongoose.model('Note', noteSchema)
+
+// const Note = require('./models/note')
+
+//-------------------------------------------------------------------------
 
 // middleware
 app.use(cors());
 app.use(express.json())
 
-let people = [
+let notes = [
     {
         "id": 1,
         "name": "Arto Hellas",
@@ -32,32 +71,27 @@ let people = [
 ];
 
 app.get('/', (req, res) => {
-    res.send('<h1>Hellootttttttoooo!</h1>')
+    res.send('<h1>Hellooppppoo World!</h1>')
+    console.log(notes)
 })
 
-app.get('/api/people', (req, res) => {
-    res.json(people)
+app.get('/api/notes', (req, res) => {
+    Note.find({}).then(notes => {
+        res.json(notes)
+        console.log(notes)
+    })
 })
-app.get('/api/people/:id', (req, res) => {
+
+app.get('/api/notes/:id', (req, res) => {
+    console.log(req.params)
     const id = parseInt(req.params.id)
-    const person = people.find(person => person.id === id)
-    if (!person) {
+    const note = notes.find(note => note.id === id)
+    if (!note) {
         res.status(404).json({ error: 'Person not found' });
         return;
     }
-    res.json(person)
+    res.json(note)
 })
-app.get('/info', (req, res) => {
-
-    // Get the current date and time
-    const date = new Date();
-
-    // Get the number of entries in the phonebook
-    const count = people.length;
-
-    // Send a response with the date and count
-    res.send(`Phonebook has info for ${count} people<br><br>${date}`);
-});
 
 app.post('/api/people', (req, res) => {
     const body = req.body
@@ -67,15 +101,15 @@ app.post('/api/people', (req, res) => {
             error: 'name or number missing from POST request properties <br> send request in JSON fromat like this {"name": "", "number": ""}'
         })
     }
-    let existingPerson = people.find(p => p.name === body.name)
+    let existingPerson = notes.find(p => p.name === body.name)
     if (existingPerson) {
         return res.status(400).json({
             error: 'database contains that name already; name must be unique'
         })
     }
     const generateId = () => {
-        const maxId = people.length > 0
-            ? Math.max(...people.map(n => n.id))
+        const maxId = notes.length > 0
+            ? Math.max(...notes.map(n => n.id))
             : 0
         return maxId + 1
     }
@@ -85,16 +119,16 @@ app.post('/api/people', (req, res) => {
         number: body.number,
     }
 
-    people = people.concat(person)
-    console.log(people)
-    res.json(people)
+    notes = notes.concat(person)
+    console.log(notes)
+    res.json(notes)
 });
 
 
-app.delete('/api/people/:id', (req, res) => {
+app.delete('/api/notes/:id', (req, res) => {
     const id = Number(req.params.id)
-    people = people.filter(p => p.id !== id)
-    console.log(people)
+    notes = notes.filter(p => p.id !== id)
+    console.log(notes)
     res.status(204).end()
 })
 
