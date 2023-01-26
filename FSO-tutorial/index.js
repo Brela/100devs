@@ -1,138 +1,80 @@
 // https://fullstackopen.com/en/part3/saving_data_to_mongo_db#exercise-3-12
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const mongoose = require('mongoose')
-const dotenv = require('dotenv')
-dotenv.config()
-
-//-------------------------------------------------------------------------
-// const password = process.env.db_password
-
-
-
-mongoose.set('strictQuery', false)
-
-const url = process.env.MONGODB_URI
-console.log('connecting to', url)
-mongoose.connect(url)
-    .then(result => {
-        console.log('connected to MongoDB')
-    })
-    .catch((error) => {
-        console.log('error connecting to MongoDB:', error.message)
-    })
-
-const noteSchema = new mongoose.Schema({
-    pName: String,
-    pNumber: Number,
-})
-noteSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
-    }
-})
-
-module.exports = mongoose.model('Note', noteSchema)
-
-const Note = mongoose.model('Note', noteSchema)
-
-// const Note = require('./models/note')
-
-//-------------------------------------------------------------------------
+//here, we are importing the Note model from note.js (where Mongoose connects to MongoDB and verifies that the data matches the schema)
+const Note = require('./models/note')
 
 // middleware
 app.use(cors());
 app.use(express.json())
 
-let notes = [
-    {
-        "id": 1,
-        "name": "Arto Hellas",
-        "number": "040-123456"
-    },
-    {
-        "id": 2,
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523"
-    },
-    {
-        "id": 3,
-        "name": "Dan Abramov",
-        "number": "12-43-234345"
-    },
-    {
-        "id": 4,
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122"
-    }
-];
 
 app.get('/', (req, res) => {
     res.send('<h1>Hellooppppoo World!</h1>')
-    console.log(notes)
 })
 
 app.get('/api/notes', (req, res) => {
     Note.find({}).then(notes => {
         res.json(notes)
-        console.log(notes)
+    })
+})
+// supposed to be this now with Monggose -----
+app.get('/api/notes/:id', (req, res) => {
+    console.log(req.params.id)
+    Note.findById(Number(req.params.id)).then(note => {
+        res.json(note)
     })
 })
 
-app.get('/api/notes/:id', (req, res) => {
-    console.log(req.params)
-    const id = parseInt(req.params.id)
-    const note = notes.find(note => note.id === id)
-    if (!note) {
-        res.status(404).json({ error: 'Person not found' });
-        return;
-    }
-    res.json(note)
-})
 
-app.post('/api/people', (req, res) => {
+app.post('/api/notes', (req, res) => {
     const body = req.body
 
-    if ((!body.name) || (!body.number)) {
-        return res.status(400).json({
-            error: 'name or number missing from POST request properties <br> send request in JSON fromat like this {"name": "", "number": ""}'
-        })
+    if (body.content === undefined) {
+        return res.status(400).json({ error: 'content missing' })
     }
-    let existingPerson = notes.find(p => p.name === body.name)
-    if (existingPerson) {
-        return res.status(400).json({
-            error: 'database contains that name already; name must be unique'
-        })
-    }
-    const generateId = () => {
-        const maxId = notes.length > 0
-            ? Math.max(...notes.map(n => n.id))
-            : 0
-        return maxId + 1
-    }
-    const person = {
-        id: generateId(),
-        name: body.name,
-        number: body.number,
-    }
-
-    notes = notes.concat(person)
-    console.log(notes)
-    res.json(notes)
-});
-
-
-app.delete('/api/notes/:id', (req, res) => {
-    const id = Number(req.params.id)
-    notes = notes.filter(p => p.id !== id)
-    console.log(notes)
-    res.status(204).end()
+    // creates a new instance of the 'Note' model and assigns the 'content' and 'important' fields of the model to 
+    //the content field of the request body
+    const note = new Note({
+        content: body.content,
+        important: body.important || false,
+    })
+    // The response is sent inside of the callback function for the save operation. 
+    // This ensures that the response is sent only if the operation succeeded.
+    // save the new note instance to the database and return the saved note in the response
+    note.save().then(savedNote => {
+        res.json(savedNote)
+    })
 })
 
+//working on getting put to work
+app.put('/api/notes/:id', (req, res) => {
+    const id = req.params.id;
+    const body = req.body;
 
+    Note.findByIdAndUpdate(id, { $set: body }, { new: true })
+        .then(updatedNote => {
+            res.json(updatedNote);
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(400).json({ error: 'malformatted id' });
+        });
+});
+
+app.delete('/api/notes/:id', (req, res) => {
+    const id = req.params.id;
+    Note.findByIdAndDelete(id)
+        .then(() => {
+            res.status(204).end();
+        })
+        .catch(error => {
+            res.status(400).send({ error: 'malformatted id' });
+
+        });
+});
 
 
 
