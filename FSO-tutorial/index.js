@@ -4,21 +4,25 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const serveStatic = require('serve-static');
 
-//here, we are importing the Notes model (the collection from MongoDB) from note.js (where Mongoose connects to MongoDB and verifies that the data matches the schema)
-const Notes = require('./models/noteCollection')
+// importing the Note model from note.js (where Mongoose connects to MongoDB)
+// This model is used to interact with the MongoDB database and perform CRUD operations on the notes collection.
+const NotesCollection = require('./models/db')
 
 // tells express to use ejs as the engine
 app.set('view engine', 'ejs')
 
 // middleware
 app.use(cors());
+app.use(express.static('public'))
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res) => {     // req request & res response  
-
-    Notes.find({}).then(Notes => {
-        // we are responding to the home page request with the index.ejs file
+    // retrieving all notes from the database
+    NotesCollection.find({}).then(Notes => {
+        console.log(Notes)
+        // we are responding to the home page request with the index.ejs file loaded with the DB notes
         res.render('index.ejs', { Notes })
     })
         .catch(error => console.error(error))
@@ -35,14 +39,16 @@ app.get('/', (req, res) => {     // req request & res response
 
 
 app.get('/api/notes', (req, res) => {
-    Note.find({}).then(notes => {
+    // again, retrieve all notes
+    NotesCollection.find({}).then(notes => {
         res.json(notes)
     })
 })
 // supposed to be this now with Monggose -----
 app.get('/api/notes/:id', (req, res) => {
     console.log(req.params.id)
-    Note.findById(Number(req.params.id)).then(note => {
+    // retrieve specific note with 'findById() method, the param.id should be the object ID
+    NotesCollection.findById(req.params.id).then(note => {
         res.json(note)
     })
 })
@@ -54,9 +60,9 @@ app.post('/api/notes', (req, res) => {
     if (body.content === undefined) {
         return res.status(400).json({ error: 'content missing' })
     }
-    // creates a new instance of the 'Note' model and assigns the 'content' and 'important' fields of the model to 
+    // creates a new instance of the 'NotesCollection' model and assigns the 'content' and 'important' fields of the model to 
     //the content field of the request body
-    const note = new Note({
+    const note = new NotesCollection({
         content: body.content,
         important: body.important || false,
     })
@@ -70,12 +76,14 @@ app.post('/api/notes', (req, res) => {
         .catch(error => next(error))
 })
 
+
+
 //working on getting put to work
 app.put('/api/notes/:id', (req, res) => {
     const id = req.params.id;
     const body = req.body;
 
-    Note.findByIdAndUpdate(id, { $set: body }, { new: true })
+    NotesCollection.findByIdAndUpdate(id, { $set: body }, { new: true })
         .then(updatedNote => {
             res.json(updatedNote);
         })
@@ -87,7 +95,7 @@ app.put('/api/notes/:id', (req, res) => {
 
 app.delete('/api/notes/:id', (req, res) => {
     const id = req.params.id;
-    Note.findByIdAndDelete(id)
+    NotesCollection.findByIdAndDelete(id)
         .then(() => {
             res.status(204).end();
         })

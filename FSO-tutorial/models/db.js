@@ -32,8 +32,10 @@ noteSchema.set('toJSON', {
 })
 
 // here, we are exporting the Note model, which can be used in other parts of the 
-// applicationto interact with the "Note collection in the MongoDB database"
+// application to interact with the collection in the MongoDB database
 // 'Note' is a name we give and represents the collection tht we are connected to with the URL in MongoDB
-module.exports = mongoose.model('Notes', noteSchema)
-console.log(mongoose.model('Notes', noteSchema))
+
+// in Mongoose, models are typically capitalized and use camelCase
+module.exports = mongoose.model('NoteCollection', noteSchema)
+console.log(module.exports)
 
