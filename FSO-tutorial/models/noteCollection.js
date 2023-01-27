@@ -5,17 +5,21 @@ const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 
 const url = process.env.MONGODB_URI
-console.log('connecting to', url)
 mongoose.connect(url)
     .then(result => {
-        console.log('connected to MongoDB')
+        console.log('Connected to MongoDB')
+
     })
     .catch((error) => {
         console.log('error connecting to MongoDB:', error.message)
     })
 
 const noteSchema = new mongoose.Schema({
-    content: String,
+    content: {
+        type: String,
+        required: true
+        // these properties are built into mongoose 
+    },
     important: Boolean
 })
 
@@ -29,5 +33,7 @@ noteSchema.set('toJSON', {
 
 // here, we are exporting the Note model, which can be used in other parts of the 
 // applicationto interact with the "Note collection in the MongoDB database"
-module.exports = mongoose.model('Note', noteSchema)
+// 'Note' is a name we give and represents the collection tht we are connected to with the URL in MongoDB
+module.exports = mongoose.model('Notes', noteSchema)
+console.log(mongoose.model('Notes', noteSchema))
 

@@ -3,17 +3,36 @@ require('dotenv').config()
 const express = require('express');
 const app = express();
 const cors = require('cors');
-//here, we are importing the Note model from note.js (where Mongoose connects to MongoDB and verifies that the data matches the schema)
-const Note = require('./models/note')
+const bodyParser = require('body-parser');
+
+//here, we are importing the Notes model (the collection from MongoDB) from note.js (where Mongoose connects to MongoDB and verifies that the data matches the schema)
+const Notes = require('./models/noteCollection')
+
+// tells express to use ejs as the engine
+app.set('view engine', 'ejs')
 
 // middleware
 app.use(cors());
 app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }));
+app.get('/', (req, res) => {     // req request & res response  
 
-
-app.get('/', (req, res) => {
-    res.send('<h1>Hellooppppoo World!</h1>')
+    Notes.find({}).then(Notes => {
+        // we are responding to the home page request with the index.ejs file
+        res.render('index.ejs', { Notes })
+    })
+        .catch(error => console.error(error))
 })
+/* app.get('/', (req, res) => {     // req request & res response  
+    console.log(__dirname)
+    res.sendFile(__dirname + '/index.html')
+    Notes.collection('quotes').find().toArray()
+        .then(results => {
+            res.render('index.ejs', { quotes: results })
+        })
+        .catch(error => console.error(error))
+}) */
+
 
 app.get('/api/notes', (req, res) => {
     Note.find({}).then(notes => {
@@ -44,9 +63,11 @@ app.post('/api/notes', (req, res) => {
     // The response is sent inside of the callback function for the save operation. 
     // This ensures that the response is sent only if the operation succeeded.
     // save the new note instance to the database and return the saved note in the response
-    note.save().then(savedNote => {
-        res.json(savedNote)
-    })
+    note.save()
+        .then(savedNote => {
+            res.json(savedNote)
+        })
+        .catch(error => next(error))
 })
 
 //working on getting put to work
@@ -82,11 +103,17 @@ app.delete('/api/notes/:id', (req, res) => {
 
 
 // centralized error handling middleware to remove error handling in every endpoint
-app.use((err, req, res, next) => {
-    console.error(err.message)
-    if (!err.statusCode) err.statusCode = 500
-    res.status(err.statusCode).send(err.message)
-})
+const errorHandler = (error, req, res, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return res.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return res.status(400).json({ error: error.message })
+    }
+
+    next(error)
+}
 
 const PORT = 3001
 app.listen(PORT)
